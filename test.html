@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دبیرستان هوشمند دکتر هشترودی | سامانه جامع مدیریت یکپارچه</title>
+    <!-- فونت وزیرمتن و Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js برای نمودارها -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* هدر */
+        header {
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: #2563eb;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            color: #0f172a;
+        }
+
+        .logo span {
+            background: #e2e8f0;
+            color: #2563eb;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .main-nav button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .main-nav button.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .main-nav button:not(.active):hover {
+            background: #e2e8f0;
+        }
+
+        .login-btn {
+            background: #10b981 !important;
+            color: white !important;
+        }
+
+        .register-btn {
+            background: #f59e0b !important;
+            color: white !important;
+        }
+
+        .logout-btn {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .section {
+            display: none;
+            padding: 30px 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border-color: #2563eb;
+        }
+
+        .feature-item i {
+            font-size: 2rem;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .feature-item span {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: #10b981;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 20px;
+        }
+
+        .operation-section {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .section-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+        .btn-danger:hover { background: #dc2626; }
+
+        .btn-success {
+            background: #10b981;
+        }
+        .btn-success:hover { background: #059669; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: #1e293b;
+            color: white;
+            padding: 12px;
+            font-weight: 500;
+        }
+
+        .data-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .data-table tr:hover {
+            background: #f1f5f9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            float: left;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            }
+            .main-nav.active {
+                display: flex;
+            }
+            .hamburger {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-school"></i>
+                <h1>دبیرستان دکتر هشترودی <span>۲۰</span></h1>
+            </div>
+            <nav class="main-nav" id="mainNav">
+                <button class="active" data-section="smart">🏠 سامانه هوشمند</button>
+                <button data-section="news">📰 اخبار و گالری</button>
+                <button id="registerBtn" class="register-btn"><i class="fas fa-user-plus"></i> ثبت نام</button>
+                <button id="loginBtn" class="login-btn"><i class="fas fa-sign-in-alt"></i> ورود</button>
+                <button id="logoutBtn" class="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </nav>
+            <div class="hamburger" id="hamburger">☰</div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ========== بخش سامانه هوشمند ========== -->
+        <section id="smartSection" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h2>🏫 سامانه جامع مدیریت هوشمند مدرسه</h2>
+                    <p>الگوبرداری شده از برترین سامانه‌های مدارس ایران (مدیار، سایما، لیزا، پویا)</p>
+                </div>
+
+                <!-- گرید ۲۰ ویژگی -->
+                <div class="features-grid" id="featuresGrid">
+                    <div class="feature-item" data-feature="نمرات"><i class="fas fa-star"></i><span>نمرات</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="گزارش روزانه"><i class="fas fa-calendar-day"></i><span>گزارش روزانه</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="گزارش عملکرد"><i class="fas fa-chart-line"></i><span>گزارش عملکرد</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="گزارش همه‌ها"><i class="fas fa-file-alt"></i><span>گزارش همه‌ها</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="گزارش دبیران"><i class="fas fa-users"></i><span>گزارش دبیران</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="اخبار"><i class="fas fa-newspaper"></i><span>اخبار</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="احتیاط"><i class="fas fa-exclamation-triangle"></i><span>احتیاط</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="مورد انضباطی"><i class="fas fa-gavel"></i><span>مورد انضباطی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="صندوق پیام"><i class="fas fa-inbox"></i><span>صندوق پیام</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="تکالیف"><i class="fas fa-pencil-alt"></i><span>تکالیف</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="مدل‌های آموزشی"><i class="fas fa-cubes"></i><span>مدل‌های آموزشی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="صدای شما"><i class="fas fa-microphone"></i><span>صدای شما</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="کلاس مجازی"><i class="fas fa-video"></i><span>کلاس مجازی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="آزمون آنلاین"><i class="fas fa-laptop"></i><span>آزمون آنلاین</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="مشاوره"><i class="fas fa-comments"></i><span>مشاوره</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="برنامه هفتگی"><i class="fas fa-calendar-week"></i><span>برنامه هفتگی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="برنامه مطالعاتی"><i class="fas fa-book-reader"></i><span>برنامه مطالعاتی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="نظرسنجی"><i class="fas fa-poll"></i><span>نظرسنجی</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="حضور و غیاب"><i class="fas fa-check-circle"></i><span>حضور و غیاب</span><span class="feature-badge">فعال</span></div>
+                    <div class="feature-item" data-feature="ثبت نام"><i class="fas fa-user-plus"></i><span>ثبت نام</span><span class="feature-badge">فعال</span></div>
+                </div>
+
+                <!-- تب‌های اصلی عملیاتی -->
+                <div class="operation-section">
+                    <div class="section-tabs" id="mainTabs">
+                        <button class="tab-btn active" data-tab="grades">📊 نمرات</button>
+                        <button class="tab-btn" data-tab="daily">📋 گزارش روزانه</button>
+                        <button class="tab-btn" data-tab="discipline">⚠️ انضباطی</button>
+                        <button class="tab-btn" data-tab="messages">✉️ صندوق پیام</button>
+                        <button class="tab-btn" data-tab="homework">📚 تکالیف</button>
+                        <button class="tab-btn" data-tab="virtualclass">🎥 کلاس مجازی</button>
+                        <button class="tab-btn" data-tab="exam">📝 آزمون آنلاین</button>
+                        <button class="tab-btn" data-tab="consult">💬 مشاوره</button>
+                        <button class="tab-btn" data-tab="survey">📊 نظرسنجی</button>
+                        <button class="tab-btn" data-tab="schedule">📅 برنامه هفتگی</button>
+                    </div>
+
+                    <!-- نمرات -->
+                    <div id="grades-tab" class="tab-content active">
+                        <div class="stats-grid">
+                            <div class="stat-card"><span class="stat-number" id="avgGrade">۰</span><div>معدل کل</div></div>
+                            <div class="stat-card"><span class="stat-number" id="bestGrade">۰</span><div>بهترین نمره</div></div>
+                            <div class="stat-card"><span class="stat-number" id="worstGrade">۰</span><div>ضعیف‌ترین</div></div>
+                        </div>
+                        <div class="chart-container"><canvas id="gradesChart"></canvas></div>
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead><tr><th>دانش‌آموز</th><th>درس</th><th>نمره</th><th>ترم</th><th>تاریخ</th></tr></thead>
+                                <tbody id="gradesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="gradeForm" style="margin-top: 20px; display: none;">
+                            <h4>ثبت نمره جدید</h4>
+                            <div class="form-row">
+                                <div class="form-group"><label>دانش‌آموز</label><select id="gradeStudent"></select></div>
+                                <div class="form-group"><label>درس</label><input type="text" id="gradeSubject" placeholder="ریاضی"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group"><label>نمره</label><input type="number" id="gradeScore" min="0" max="20" step="0.25"></div>
+                                <div class="form-group"><label>ترم</label><select id="gradeTerm"><option value="اول">اول</option><option value="دوم">دوم</option></select></div>
+                            </div>
+                            <button class="btn" id="saveGrade">ذخیره نمره</button>
+                        </div>
+                    </div>
+
+                    <!-- گزارش روزانه -->
+                    <div id="daily-tab" class="tab-content">
+                        <div class="stats-grid">
+                            <div class="stat-card"><span class="stat-number" id="presentToday">۰</span><div>حاضرین امروز</div></div>
+                            <div class="stat-card"><span class="stat-number" id="absentToday">۰</span><div>غایبین امروز</div></div>
+                            <div class="stat-card"><span class="stat-number" id="hwToday">۰</span><div>تکالیف جدید</div></div>
+                        </div>
+                        <div id="dailyDetails" style="background:#f8fafc; padding:15px; border-radius:16px;"></div>
+                    </div>
+
+                    <!-- موارد انضباطی -->
+                    <div id="discipline-tab" class="tab-content">
+                        <div id="disciplineForm" style="margin-bottom:20px; display:none;">
+                            <h4>ثبت مورد انضباطی</h4>
+                            <div class="form-row">
+                                <div class="form-group"><label>دانش‌آموز</label><select id="disciplineStudent"></select></div>
+                                <div class="form-group"><label>نوع</label><select id="disciplineType"><option value="positive">✅ تشویق</option><option value="negative">⚠️ اخطار</option></select></div>
+                            </div>
+                            <div class="form-group"><label>توضیحات</label><textarea id="disciplineDesc" rows="2"></textarea></div>
+                            <button class="btn" id="saveDiscipline">ثبت</button>
+                        </div>
+                        <table class="data-table">
+                            <thead><tr><th>دانش‌آموز</th><th>نوع</th><th>توضیحات</th><th>تاریخ</th></tr></thead>
+                            <tbody id="disciplineTable"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- صندوق پیام -->
+                    <div id="messages-tab" class="tab-content">
+                        <button class="btn" id="newMessageBtn" style="margin-bottom:15px;">✉️ پیام جدید</button>
+                        <div id="messageList"></div>
+                    </div>
+
+                    <!-- تکالیف -->
+                    <div id="homework-tab" class="tab-content">
+                        <div id="homeworkForm" style="margin-bottom:20px; display:none;">
+                            <div class="form-row">
+                                <div class="form-group"><label>عنوان</label><input type="text" id="hwTitle"></div>
+                                <div class="form-group"><label>پایه</label><select id="hwClass"><option>هفتم</option><option>هشتم</option><option>نهم</option></select></div>
+                            </div>
+                            <div class="form-group"><label>توضیحات</label><textarea id="hwDesc" rows="2"></textarea></div>
+                            <button class="btn" id="saveHomework">ثبت تکلیف</button>
+                        </div>
+                        <div id="homeworkList"></div>
+                    </div>
+
+                    <!-- کلاس مجازی -->
+                    <div id="virtualclass-tab" class="tab-content">
+                        <div class="stats-grid">
+                            <div class="stat-card"><i class="fas fa-video fa-2x" style="color:#2563eb;"></i><h4>اسکای روم</h4><button class="btn btn-success" onclick="joinClass('skyroom')">ورود</button></div>
+                            <div class="stat-card"><i class="fas fa-chalkboard fa-2x" style="color:#10b981;"></i><h4>بیگ بلوباتن</h4><button class="btn btn-success" onclick="joinClass('bbb')">ورود</button></div>
+                            <div class="stat-card"><i class="fas fa-laptop fa-2x" style="color:#f59e0b;"></i><h4>ادوبی کانکت</h4><button class="btn btn-success" onclick="joinClass('adobe')">ورود</button></div>
+                        </div>
+                        <div id="classSchedule"></div>
+                    </div>
+
+                    <!-- آزمون آنلاین -->
+                    <div id="exam-tab" class="tab-content">
+                        <div id="examForm" style="margin-bottom:20px; display:none;">
+                            <h4>ایجاد آزمون جدید</h4>
+                            <div class="form-row">
+                                <div class="form-group"><label>عنوان</label><input type="text" id="examTitle"></div>
+                                <div class="form-group"><label>مدت (دقیقه)</label><input type="number" id="examTime"></div>
+                            </div>
+                            <div class="form-group"><label>توضیحات</label><textarea id="examDesc" rows="2"></textarea></div>
+                            <button class="btn" id="createExam">ایجاد آزمون</button>
+                        </div>
+                        <div id="examList"></div>
+                    </div>
+
+                    <!-- مشاوره -->
+                    <div id="consult-tab" class="tab-content">
+                        <div class="stats-grid">
+                            <div class="stat-card"><i class="fas fa-calendar-check fa-2x"></i><h4>نوبت مشاوره</h4><button class="btn" id="bookConsultBtn">رزرو نوبت</button></div>
+                            <div class="stat-card"><i class="fas fa-clock fa-2x"></i><h4>نوبت‌های من</h4><div id="myAppointments">۰ نوبت</div></div>
+                        </div>
+                        <div id="consultationList"></div>
+                    </div>
+
+                    <!-- نظرسنجی -->
+                    <div id="survey-tab" class="tab-content">
+                        <div id="surveyForm" style="margin-bottom:20px; display:none;">
+                            <h4>ایجاد نظرسنجی</h4>
+                            <div class="form-group"><label>سوال</label><input type="text" id="surveyQuestion"></div>
+                            <div class="form-group"><label>گزینه‌ها (با کاما جدا)</label><input type="text" id="surveyOptions" placeholder="عالی, خوب, متوسط, بد"></div>
+                            <button class="btn" id="createSurvey">ایجاد</button>
+                        </div>
+                        <div id="surveyList"></div>
+                    </div>
+
+                    <!-- برنامه هفتگی -->
+                    <div id="schedule-tab" class="tab-content">
+                        <div style="overflow-x:auto;">
+                            <table class="data-table">
+                                <thead><tr><th>ساعت</th><th>شنبه</th><th>یکشنبه</th><th>دوشنبه</th><th>سه‌شنبه</th><th>چهارشنبه</th></tr></thead>
+                                <tbody>
+                                    <tr><td>۸-۹:۳۰</td><td>ریاضی</td><td>فارسی</td><td>علوم</td><td>انگلیسی</td><td>اجتماعی</td></tr>
+                                    <tr><td>۹:۳۰-۱۱</td><td>علوم</td><td>ریاضی</td><td>فارسی</td><td>ورزش</td><td>هنر</td></tr>
+                                    <tr><td>۱۱-۱۲:۳۰</td><td>انگلیسی</td><td>اجتماعی</td><td>ریاضی</td><td>فارسی</td><td>علوم</td></tr>
+                                    <tr><td>۱۲:۳۰-۱۳:۳۰</td><td colspan="5">استراحت و نماز</td></tr>
+                                    <tr><td>۱۳:۳۰-۱۵</td><td>قرآن</td><td>هنر</td><td>ورزش</td><td>تفکر</td><td>کامپیوتر</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="margin-top:20px;"><button class="btn" id="editScheduleBtn" style="display:none;">ویرایش برنامه</button></div>
+                    </div>
+                </div>
+
+                <!-- بخش ثبت نام دانش‌آموز توسط مدیر -->
+                <div class="operation-section" id="registrationSection" style="display: none;">
+                    <h3>📋 فرم ثبت نام دانش‌آموز (ویژه مدیر)</h3>
+                    <form id="adminRegistrationForm">
+                        <div class="form-row">
+                            <div class="form-group"><label>نام</label><input type="text" id="regName" required></div>
+                            <div class="form-group"><label>نام خانوادگی</label><input type="text" id="regFamily" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>کد ملی</label><input type="text" id="regNational" required></div>
+                            <div class="form-group"><label>تاریخ تولد</label><input type="date" id="regBirth" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>پایه</label><select id="regGrade"><option>هفتم</option><option>هشتم</option><option>نهم</option></select></div>
+                            <div class="form-group"><label>نام والدین</label><input type="text" id="regParent" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label>تلفن همراه</label><input type="tel" id="regPhone" required></div>
+                            <div class="form-group"><label>تلفن ثابت</label><input type="tel" id="regLandline"></div>
+                        </div>
+                        <div class="form-group"><label>آدرس</label><textarea id="regAddress" rows="2" required></textarea></div>
+                        <button type="submit" class="btn">ثبت نام و ساخت حساب</button>
+                    </form>
+                    <div style="margin-top:30px;">
+                        <h4>لیست دانش‌آموزان ثبت نام شده</h4>
+                        <table class="data-table">
+                            <thead><tr><th>نام</th><th>نام خانوادگی</th><th>کد ملی</th><th>پایه</th><th>والدین</th><th>تلفن</th><th>نام کاربری</th><th>عملیات</th></tr></thead>
+                            <tbody id="registrationsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== بخش اخبار و گالری ========== -->
+        <section id="newsSection" class="section">
+            <div class="container">
+                <div class="hero">
+                    <h2>📰 اخبار مدرسه و گالری تصاویر</h2>
+                </div>
+                <div class="operation-section">
+                    <div id="newsForm" style="margin-bottom:20px; display:none;">
+                        <h4>افزودن خبر جدید</h4>
+                        <div class="form-row">
+                            <div class="form-group"><label>عنوان</label><input type="text" id="newsTitle"></div>
+                            <div class="form-group"><label>تاریخ</label><input type="date" id="newsDate"></div>
+                        </div>
+                        <div class="form-group"><label>متن خبر</label><textarea id="newsContent" rows="3"></textarea></div>
+                        <div class="form-group"><label>لینک تصویر</label><input type="url" id="newsImage" placeholder="https://..."></div>
+                        <button class="btn" id="addNews">انتشار خبر</button>
+                    </div>
+                    <div id="newsContainer" class="news-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px;"></div>
+                </div>
+                <div class="operation-section">
+                    <h3>📸 گالری تصاویر مدرسه</h3>
+                    <div class="gallery-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; margin-top:20px;">
+                        <img src="https://placehold.co/300x200/2563eb/white?text=کلاس" style="width:100%; border-radius:12px;">
+                        <img src="https://placehold.co/300x200/10b981/white?text=کتابخانه" style="width:100%; border-radius:12px;">
+                        <img src="https://placehold.co/300x200/f59e0b/white?text=ورزشگاه" style="width:100%; border-radius:12px;">
+                        <img src="https://placehold.co/300x200/ef4444/white?text=آزمایشگاه" style="width:100%; border-radius:12px;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== مودال‌ها ========== -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('loginModal')">&times;</span>
+                <h3>ورود به سامانه</h3>
+                <div class="form-group"><label>نام کاربری</label><input type="text" id="loginUsername"></div>
+                <div class="form-group"><label>رمز عبور</label><input type="password" id="loginPassword"></div>
+                <div class="form-group"><label>نقش</label><select id="loginRole"><option value="مدیر">مدیر</option><option value="دانش‌آموز">دانش‌آموز</option></select></div>
+                <button class="btn" id="doLogin" style="width:100%;">ورود</button>
+            </div>
+        </div>
+
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('registerModal')">&times;</span>
+                <h3>ثبت نام کاربر جدید</h3>
+                <div class="form-group"><label>نام کاربری</label><input type="text" id="regUsername"></div>
+                <div class="form-group"><label>رمز عبور</label><input type="password" id="regPassword"></div>
+                <div class="form-group"><label>تکرار رمز</label><input type="password" id="regConfirm"></div>
+                <div class="form-group"><label>نقش</label><select id="regUserRole"><option value="دانش‌آموز">دانش‌آموز</option><option value="مدیر">مدیر</option></select></div>
+                <div id="adminCodeField" style="display:none;"><div class="form-group"><label>کد ادمین</label><input type="text" id="adminCode"></div></div>
+                <button class="btn" id="doRegister" style="width:100%;">ثبت نام</button>
+            </div>
+        </div>
+
+        <div id="messageModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('messageModal')">&times;</span>
+                <h3>ارسال پیام جدید</h3>
+                <div class="form-group"><label>گیرنده</label><select id="messageReceiver"></select></div>
+                <div class="form-group"><label>موضوع</label><input type="text" id="messageSubject"></div>
+                <div class="form-group"><label>متن پیام</label><textarea id="messageBody" rows="4"></textarea></div>
+                <button class="btn" id="sendMessage">ارسال</button>
+            </div>
+        </div>
+
+        <div id="examModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('examModal')">&times;</span>
+                <h3 id="examModalTitle">آزمون</h3>
+                <div id="examQuestions"></div>
+                <button class="btn" id="submitExam">ثبت پاسخ‌ها</button>
+            </div>
+        </div>
+
+        <div id="surveyModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('surveyModal')">&times;</span>
+                <h3 id="surveyModalTitle"></h3>
+                <div id="surveyOptions"></div>
+                <button class="btn" id="voteSurvey">ثبت رأی</button>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background:#1e293b; color:white; text-align:center; padding:30px 0; margin-top:50px;">
+        <p>دبیرستان دوره اول دکتر هشترودی | سامانه هوشمند یکپارچه | تمامی حقوق محفوظ © ۱۴۰۴</p>
+    </footer>
+
+    <script>
+        (function() {
+            // ========== داده‌ها در localStorage ==========
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            let registrations = JSON.parse(localStorage.getItem('registrations')) || [];
+            let grades = JSON.parse(localStorage.getItem('grades')) || [];
+            let disciplines = JSON.parse(localStorage.getItem('disciplines')) || [];
+            let messages = JSON.parse(localStorage.getItem('messages')) || [];
+            let homework = JSON.parse(localStorage.getItem('homework')) || [];
+            let exams = JSON.parse(localStorage.getItem('exams')) || [];
+            let surveys = JSON.parse(localStorage.getItem('surveys')) || [];
+            let surveyVotes = JSON.parse(localStorage.getItem('surveyVotes')) || {};
+            let consultations = JSON.parse(localStorage.getItem('consultations')) || [];
+            let currentUser = null;
+
+            // ایجاد مدیر پیش‌فرض
+            if (!users.some(u => u.role === 'مدیر')) {
+                users.push({ username: 'admin', password: 'admin', role: 'مدیر' });
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            // ========== توابع کمکی ==========
+            const today = () => new Date().toISOString().split('T')[0];
+            window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+            // ========== منوی همبرگری ==========
+            document.getElementById('hamburger').addEventListener('click', () => {
+                document.getElementById('mainNav').classList.toggle('active');
+            });
+
+            // ========== تغییر بین بخش‌های اصلی ==========
+            document.querySelectorAll('[data-section]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-section]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(this.dataset.section + 'Section').classList.add('active');
+                    document.getElementById('mainNav').classList.remove('active');
+                });
+            });
+
+            // ========== مدیریت تب‌های عملیاتی ==========
+            document.querySelectorAll('[data-tab]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+                });
+            });
+
+            // ========== کلیک روی آیتم‌های گرید ویژگی‌ها ==========
+            document.querySelectorAll('.feature-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const feature = this.dataset.feature;
+                    const tabMap = {
+                        'نمرات': 'grades',
+                        'گزارش روزانه': 'daily',
+                        'مورد انضباطی': 'discipline',
+                        'صندوق پیام': 'messages',
+                        'تکالیف': 'homework',
+                        'کلاس مجازی': 'virtualclass',
+                        'آزمون آنلاین': 'exam',
+                        'مشاوره': 'consult',
+                        'نظرسنجی': 'survey',
+                        'برنامه هفتگی': 'schedule'
+                    };
+                    if (tabMap[feature]) {
+                        document.querySelector(`[data-tab="${tabMap[feature]}"]`).click();
+                    } else if (feature === 'اخبار') {
+                        document.querySelector('[data-section="news"]').click();
+                    } else if (feature === 'ثبت نام') {
+                        if (currentUser?.role === 'مدیر') {
+                            document.getElementById('registrationSection').scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                            alert('این بخش فقط برای مدیر قابل دسترسی است.');
+                        }
+                    } else {
+                        alert(`بخش «${feature}» فعال است و اطلاعات آن قابل مشاهده می‌باشد.`);
+                    }
+                });
+            });
+
+            // ========== نمایش/پنهان کردن فیلد کد ادمین ==========
+            document.getElementById('regUserRole').addEventListener('change', function() {
+                document.getElementById('adminCodeField').style.display = this.value === 'مدیر' ? 'block' : 'none';
+            });
+
+            // ========== ثبت نام کاربر ==========
+            document.getElementById('doRegister').addEventListener('click', () => {
+                const username = document.getElementById('regUsername').value.trim();
+                const pwd = document.getElementById('regPassword').value.trim();
+                const confirm = document.getElementById('regConfirm').value.trim();
+                const role = document.getElementById('regUserRole').value;
+                const code = document.getElementById('adminCode').value.trim();
+
+                if (!username || !pwd || !confirm) return alert('همه فیلدها را پر کنید');
+                if (pwd !== confirm) return alert('رمز عبور مطابقت ندارد');
+                if (users.find(u => u.username === username)) return alert('نام کاربری تکراری است');
+                if (role === 'مدیر' && code !== '12345') return alert('کد ادمین اشتباه است');
+
+                users.push({ username, password: pwd, role });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('ثبت نام موفقیت‌آمیز بود');
+                closeModal('registerModal');
+            });
+
+            // ========== ورود ==========
+            document.getElementById('doLogin').addEventListener('click', () => {
+                const username = document.getElementById('loginUsername').value.trim();
+                const pwd = document.getElementById('loginPassword').value.trim();
+                const role = document.getElementById('loginRole').value;
+                const user = users.find(u => u.username === username && u.password === pwd && u.role === role);
+                if (user) {
+                    currentUser = user;
+                    closeModal('loginModal');
+                    updateUIForUser();
+                } else {
+                    alert('اطلاعات نادرست است');
+                }
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                currentUser = null;
+                updateUIForUser();
+            });
+
+            document.getElementById('loginBtn').addEventListener('click', () => {
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+
+            document.getElementById('registerBtn').addEventListener('click', () => {
+                document.getElementById('registerModal').style.display = 'flex';
+            });
+
+            // ========== به‌روزرسانی رابط کاربری بر اساس نقش ==========
+            function updateUIForUser() {
+                const isAdmin = currentUser?.role === 'مدیر';
+                document.getElementById('loginBtn').style.display = currentUser ? 'none' : 'inline-block';
+                document.getElementById('registerBtn').style.display = currentUser ? 'none' : 'inline-block';
+                document.getElementById('logoutBtn').style.display = currentUser ? 'inline-block' : 'none';
+                // نمایش/پنهان کردن فرم‌های مدیریتی
+                document.getElementById('gradeForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('disciplineForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('homeworkForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('examForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('newsForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('surveyForm').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('registrationSection').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('editScheduleBtn').style.display = isAdmin ? 'block' : 'none';
+                // بارگذاری مجدد داده‌ها
+                loadAllData();
+            }
+
+            // ========== پر کردن لیست دانش‌آموزان در سلکت‌ها ==========
+            function populateStudentSelects() {
+                const gradeStudent = document.getElementById('gradeStudent');
+                const disciplineStudent = document.getElementById('disciplineStudent');
+                const messageReceiver = document.getElementById('messageReceiver');
+                if (!gradeStudent) return;
+                const options = registrations.map(r => `<option value="${r.username}">${r.name} ${r.family}</option>`).join('');
+                gradeStudent.innerHTML = options;
+                disciplineStudent.innerHTML = options;
+                messageReceiver.innerHTML = options + (currentUser?.role === 'مدیر' ? '<option value="all">همه کاربران</option>' : '');
+            }
+
+            // ========== نمرات ==========
+            function renderGrades() {
+                const filtered = currentUser?.role === 'مدیر' ? grades : grades.filter(g => g.username === currentUser?.username);
+                const tbody = document.getElementById('gradesTableBody');
+                tbody.innerHTML = '';
+                let sum = 0, max = 0, min = 20;
+                filtered.forEach(g => {
+                    const student = registrations.find(r => r.username === g.username);
+                    const name = student ? `${student.name} ${student.family}` : g.username;
+                    tbody.innerHTML += `<tr><td>${name}</td><td>${g.subject}</td><td>${g.score}</td><td>${g.term}</td><td>${g.date}</td></tr>`;
+                    sum += g.score;
+                    max = Math.max(max, g.score);
+                    min = Math.min(min, g.score);
+                });
+                document.getElementById('avgGrade').innerText = filtered.length ? (sum/filtered.length).toFixed(2) : '۰';
+                document.getElementById('bestGrade').innerText = filtered.length ? max : '۰';
+                document.getElementById('worstGrade').innerText = filtered.length ? min : '۰';
+
+                // نمودار
+                const ctx = document.getElementById('gradesChart')?.getContext('2d');
+                if (ctx) {
+                    // destroy previous chart if any
+                    Chart.getChart(ctx)?.destroy();
+                    if (filtered.length) {
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: filtered.map(g => g.subject),
+                                datasets: [{ label: 'نمرات', data: filtered.map(g => g.score), backgroundColor: '#2563eb' }]
+                            }
+                        });
+                    }
+                }
+            }
+
+            document.getElementById('saveGrade')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                grades.push({
+                    username: document.getElementById('gradeStudent').value,
+                    subject: document.getElementById('gradeSubject').value,
+                    score: parseFloat(document.getElementById('gradeScore').value),
+                    term: document.getElementById('gradeTerm').value,
+                    date: today()
+                });
+                localStorage.setItem('grades', JSON.stringify(grades));
+                renderGrades();
+            });
+
+            // ========== موارد انضباطی ==========
+            function renderDiscipline() {
+                const tbody = document.getElementById('disciplineTable');
+                tbody.innerHTML = '';
+                disciplines.forEach(d => {
+                    const student = registrations.find(r => r.username === d.username);
+                    tbody.innerHTML += `<tr><td>${student ? student.name + ' ' + student.family : d.username}</td><td>${d.type === 'positive' ? '✅ تشویق' : '⚠️ اخطار'}</td><td>${d.desc}</td><td>${d.date}</td></tr>`;
+                });
+            }
+
+            document.getElementById('saveDiscipline')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                disciplines.push({
+                    username: document.getElementById('disciplineStudent').value,
+                    type: document.getElementById('disciplineType').value,
+                    desc: document.getElementById('disciplineDesc').value,
+                    date: today()
+                });
+                localStorage.setItem('disciplines', JSON.stringify(disciplines));
+                renderDiscipline();
+            });
+
+            // ========== صندوق پیام ==========
+            function renderMessages() {
+                const list = document.getElementById('messageList');
+                if (!list) return;
+                const userMessages = messages.filter(m => m.receiver === currentUser?.username || m.sender === currentUser?.username || (m.receiver === 'all' && currentUser?.role === 'دانش‌آموز'));
+                list.innerHTML = userMessages.map(m => `
+                    <div style="background:#f1f5f9; padding:15px; margin-bottom:10px; border-radius:12px; border-right:5px solid ${m.sender === currentUser?.username ? '#10b981' : '#2563eb'}">
+                        <strong>${m.sender === currentUser?.username ? 'ارسال به ' + m.receiver : 'دریافت از ' + m.sender}</strong>
+                        <p>${m.subject}</p>
+                        <small>${m.date}</small>
+                    </div>
+                `).join('') || '<p>پیامی وجود ندارد</p>';
+            }
+
+            document.getElementById('newMessageBtn')?.addEventListener('click', () => {
+                populateStudentSelects(); // به‌روزرسانی گیرندگان
+                document.getElementById('messageModal').style.display = 'flex';
+            });
+
+            document.getElementById('sendMessage')?.addEventListener('click', () => {
+                messages.push({
+                    sender: currentUser.username,
+                    receiver: document.getElementById('messageReceiver').value,
+                    subject: document.getElementById('messageSubject').value,
+                    body: document.getElementById('messageBody').value,
+                    date: today()
+                });
+                localStorage.setItem('messages', JSON.stringify(messages));
+                closeModal('messageModal');
+                renderMessages();
+            });
+
+            // ========== تکالیف ==========
+            function renderHomework() {
+                const container = document.getElementById('homeworkList');
+                if (!container) return;
+                // اگر دانش‌آموز است، فقط تکالیف پایه خود را ببیند
+                const student = registrations.find(r => r.username === currentUser?.username);
+                const filtered = currentUser?.role === 'مدیر' ? homework : homework.filter(h => h.class === student?.grade);
+                container.innerHTML = filtered.map(h => `
+                    <div style="background:#f1f5f9; padding:15px; margin-bottom:10px; border-radius:12px;">
+                        <h4>${h.title}</h4>
+                        <p>${h.desc}</p>
+                        <small>پایه: ${h.class} | تاریخ: ${h.date}</small>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('saveHomework')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                homework.push({
+                    title: document.getElementById('hwTitle').value,
+                    desc: document.getElementById('hwDesc').value,
+                    class: document.getElementById('hwClass').value,
+                    date: today()
+                });
+                localStorage.setItem('homework', JSON.stringify(homework));
+                renderHomework();
+            });
+
+            // ========== کلاس مجازی ==========
+            window.joinClass = (platform) => {
+                const urls = {
+                    skyroom: 'https://www.skyroom.online/',
+                    bbb: 'https://bigbluebutton.org/',
+                    adobe: 'https://www.adobe.com/products/adobeconnect.html'
+                };
+                window.open(urls[platform], '_blank');
+            };
+
+            // ========== آزمون آنلاین ==========
+            function renderExams() {
+                const list = document.getElementById('examList');
+                if (!list) return;
+                list.innerHTML = exams.map((e, idx) => `
+                    <div style="background:#f1f5f9; padding:15px; margin-bottom:10px; border-radius:12px;">
+                        <h4>${e.title}</h4>
+                        <p>${e.desc}</p>
+                        <small>مدت: ${e.time} دقیقه | تاریخ: ${e.date}</small>
+                        <button class="btn btn-success" style="margin-top:10px;" onclick="startExam(${idx})">شرکت در آزمون</button>
+                    </div>
+                `).join('');
+            }
+
+            window.startExam = (index) => {
+                const exam = exams[index];
+                document.getElementById('examModalTitle').innerText = exam.title;
+                // سوالات نمونه
+                document.getElementById('examQuestions').innerHTML = `
+                    <p>۱. سوال اول نمونه؟</p>
+                    <input type="radio" name="q1" value="a"> گزینه ۱<br>
+                    <input type="radio" name="q1" value="b"> گزینه ۲<br>
+                    <input type="radio" name="q1" value="c"> گزینه ۳<br>
+                    <p>۲. سوال دوم نمونه؟</p>
+                    <input type="radio" name="q2" value="a"> گزینه ۱<br>
+                    <input type="radio" name="q2" value="b"> گزینه ۲<br>
+                `;
+                document.getElementById('examModal').style.display = 'flex';
+            };
+
+            document.getElementById('createExam')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                exams.push({
+                    title: document.getElementById('examTitle').value,
+                    time: document.getElementById('examTime').value,
+                    desc: document.getElementById('examDesc').value,
+                    date: today()
+                });
+                localStorage.setItem('exams', JSON.stringify(exams));
+                renderExams();
+            });
+
+            document.getElementById('submitExam')?.addEventListener('click', () => {
+                alert('پاسخ‌های شما ثبت شد. نمره نهایی: ۱۶ از ۲۰');
+                closeModal('examModal');
+            });
+
+            // ========== مشاوره ==========
+            document.getElementById('bookConsultBtn')?.addEventListener('click', () => {
+                const date = prompt('تاریخ مورد نظر (YYYY-MM-DD) را وارد کنید', today());
+                if (date) {
+                    consultations.push({ username: currentUser.username, date, status: 'در انتظار' });
+                    localStorage.setItem('consultations', JSON.stringify(consultations));
+                    alert('نوبت با موفقیت رزرو شد');
+                    renderConsultations();
+                }
+            });
+
+            function renderConsultations() {
+                const userCons = consultations.filter(c => c.username === currentUser?.username);
+                document.getElementById('myAppointments').innerText = userCons.length + ' نوبت';
+                // نمایش لیست مشاوره‌ها برای مدیر
+                const list = document.getElementById('consultationList');
+                if (currentUser?.role === 'مدیر') {
+                    list.innerHTML = consultations.map(c => {
+                        const student = registrations.find(r => r.username === c.username);
+                        return `<div>${student?.name} ${student?.family} - تاریخ ${c.date} - وضعیت ${c.status}</div>`;
+                    }).join('');
+                } else {
+                    list.innerHTML = '';
+                }
+            }
+
+            // ========== نظرسنجی ==========
+            function renderSurveys() {
+                const list = document.getElementById('surveyList');
+                if (!list) return;
+                list.innerHTML = surveys.map((s, idx) => `
+                    <div style="background:#f1f5f9; padding:15px; margin-bottom:10px; border-radius:12px;">
+                        <h4>${s.question}</h4>
+                        <button class="btn" onclick="showSurvey(${idx})">شرکت در نظرسنجی</button>
+                    </div>
+                `).join('');
+            }
+
+            window.showSurvey = (index) => {
+                const s = surveys[index];
+                document.getElementById('surveyModalTitle').innerText = s.question;
+                const options = s.options.split(',').map(opt => opt.trim());
+                let html = '';
+                options.forEach((opt, i) => {
+                    html += `<input type="radio" name="surveyOpt" value="${opt}"> ${opt}<br>`;
+                });
+                document.getElementById('surveyOptions').innerHTML = html;
+                document.getElementById('surveyModal').dataset.index = index;
+                document.getElementById('surveyModal').style.display = 'flex';
+            };
+
+            document.getElementById('voteSurvey')?.addEventListener('click', () => {
+                const selected = document.querySelector('input[name="surveyOpt"]:checked');
+                if (!selected) return alert('یک گزینه را انتخاب کنید');
+                const index = document.getElementById('surveyModal').dataset.index;
+                const key = `survey_${index}`;
+                surveyVotes[key] = surveyVotes[key] || {};
+                surveyVotes[key][selected.value] = (surveyVotes[key][selected.value] || 0) + 1;
+                localStorage.setItem('surveyVotes', JSON.stringify(surveyVotes));
+                alert('رأی شما ثبت شد');
+                closeModal('surveyModal');
+            });
+
+            document.getElementById('createSurvey')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                surveys.push({
+                    question: document.getElementById('surveyQuestion').value,
+                    options: document.getElementById('surveyOptions').value
+                });
+                localStorage.setItem('surveys', JSON.stringify(surveys));
+                renderSurveys();
+            });
+
+            // ========== گزارش روزانه ==========
+            function renderDaily() {
+                const todayStr = today();
+                const present = Math.floor(Math.random() * 30) + 10; // نمونه
+                const absent = Math.floor(Math.random() * 5);
+                document.getElementById('presentToday').innerText = present;
+                document.getElementById('absentToday').innerText = absent;
+                document.getElementById('hwToday').innerText = homework.filter(h => h.date === todayStr).length;
+                document.getElementById('dailyDetails').innerHTML = `
+                    <p>📌 تعداد کلاس‌های امروز: ۶</p>
+                    <p>📌 تکالیف جدید: ${homework.filter(h => h.date === todayStr).length}</p>
+                    <p>📌 رویدادهای امروز: جشن روز دانش‌آموز</p>
+                `;
+            }
+
+            // ========== اخبار ==========
+            let newsList = JSON.parse(localStorage.getItem('news')) || [];
+            function renderNews() {
+                const container = document.getElementById('newsContainer');
+                if (!container) return;
+                container.innerHTML = newsList.map(n => `
+                    <div style="background:white; border-radius:16px; overflow:hidden; box-shadow:0 4px 6px -1px rgba(0,0,0,0.1);">
+                        ${n.image ? `<img src="${n.image}" style="width:100%; height:150px; object-fit:cover;">` : ''}
+                        <div style="padding:15px;">
+                            <h4>${n.title}</h4>
+                            <p>${n.content}</p>
+                            <small>${n.date}</small>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('addNews')?.addEventListener('click', () => {
+                if (currentUser?.role !== 'مدیر') return;
+                newsList.push({
+                    title: document.getElementById('newsTitle').value,
+                    date: document.getElementById('newsDate').value,
+                    content: document.getElementById('newsContent').value,
+                    image: document.getElementById('newsImage').value
+                });
+                localStorage.setItem('news', JSON.stringify(newsList));
+                renderNews();
+            });
+
+            // ========== ثبت نام دانش‌آموز توسط مدیر ==========
+            document.getElementById('adminRegistrationForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                if (currentUser?.role !== 'مدیر') return;
+                const name = document.getElementById('regName').value.trim();
+                const family = document.getElementById('regFamily').value.trim();
+                const username = (name + '.' + family).replace(/\s+/g, '').toLowerCase();
+                if (users.find(u => u.username === username)) {
+                    alert('این دانش‌آموز قبلاً ثبت نام شده');
+                    return;
+                }
+                users.push({ username, password: '123456', role: 'دانش‌آموز' });
+                registrations.push({
+                    username,
+                    name, family,
+                    national: document.getElementById('regNational').value,
+                    birth: document.getElementById('regBirth').value,
+                    grade: document.getElementById('regGrade').value,
+                    parent: document.getElementById('regParent').value,
+                    phone: document.getElementById('regPhone').value,
+                    landline: document.getElementById('regLandline').value,
+                    address: document.getElementById('regAddress').value
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('registrations', JSON.stringify(registrations));
+                alert(`دانش‌آموز با نام کاربری ${username} و رمز 123456 ثبت شد.`);
+                renderRegistrations();
+                e.target.reset();
+            });
+
+            function renderRegistrations() {
+                const tbody = document.getElementById('registrationsList');
+                if (!tbody) return;
+                tbody.innerHTML = registrations.map(r => `
+                    <tr>
+                        <td>${r.name}</td><td>${r.family}</td><td>${r.national}</td><td>${r.grade}</td><td>${r.parent}</td><td>${r.phone}</td><td>${r.username}</td>
+                        <td><button class="btn btn-danger" onclick="deleteStudent('${r.username}')">حذف</button></td>
+                    </tr>
+                `).join('');
+            }
+
+            window.deleteStudent = (username) => {
+                if (currentUser?.role !== 'مدیر') return;
+                users = users.filter(u => u.username !== username);
+                registrations = registrations.filter(r => r.username !== username);
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('registrations', JSON.stringify(registrations));
+                renderRegistrations();
+            };
+
+            // ========== بارگذاری همه داده‌ها ==========
+            function loadAllData() {
+                populateStudentSelects();
+                renderGrades();
+                renderDiscipline();
+                renderMessages();
+                renderHomework();
+                renderExams();
+                renderSurveys();
+                renderConsultations();
+                renderDaily();
+                renderNews();
+                renderRegistrations();
+            }
+
+            // ========== مقداردهی اولیه ==========
+            updateUIForUser();
+            loadAllData();
+
+            // تنظیم تاریخ پیش‌فرض برای فیلدها
+            document.getElementById('newsDate') && (document.getElementById('newsDate').value = today());
+            document.getElementById('regBirth') && (document.getElementById('regBirth').value = '2010-01-01');
+        })();
+    </script>
+</body>
+</html>
